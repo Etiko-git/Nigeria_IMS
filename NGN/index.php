@@ -557,8 +557,8 @@
     </div>
 </div>
             <div class="auth-buttons">
-                <button class="btn btn-outline">Login</button>
-                <button class="btn btn-primary">Create Account</button>
+                <button class="btn btn-outline"><a href="reg-log.php">Login</a></button>
+                <button class="btn btn-primary"><a href="reg-log.php">Create Account</a></button>
             </div>
         </div>
     </header>
@@ -846,16 +846,7 @@
             });
             
             // Auth buttons functionality
-            const loginBtn = document.querySelector('.btn-outline');
-            const signupBtn = document.querySelector('.btn-primary');
             
-            loginBtn.addEventListener('click', function() {
-                alert('Login feature would open here');
-            });
-            
-            signupBtn.addEventListener('click', function() {
-                alert('Registration form would open here');
-            });
         });
     </script>
 </body>
