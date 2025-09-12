@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - myID</title>
+  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+  <header>
+    <div class="top-header">
+      <div class="logo-container" onclick="window.location.href='index.php';" style="cursor: pointer;">
+        <div class="logo">
+          <img src="img/Nigeria.jpg" alt="NIS Portal Logo" width="60" height="60">
+        </div>
+        <div class="logo-text">
+          <h1>NIGERIA IMMIGRATION SERVICE</h1>
+          <span>OFFICIAL E-SERVICES PORTAL</span>
+        </div>
+      </div>
+      <div class="auth-buttons">
+        <button class="btn btn-outline" onclick="window.location.href='reg-log.php?form=login'">Login</button>
+        <button class="btn btn-primary" onclick="window.location.href='reg-log.php?form=register'">Create
+          Account</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="login-container" id="login-container">
+    <div class="login-card" id="myid-ui-container">
+      <h2 class="login-heading">Choose Login Method</h2>
+      <div class="button-group">
+        <button class="login-btn" onclick="loginWithMyIDOnSameDevice()">
+          <img src="img/myid-logo.png" alt="myID" class="btn-icon-rounded" />
+          <div>
+            <span><strong>myID on the same device</strong></span>
+            <span style="color:rgb(80, 80, 190)"> <br>(Deep Link)</span>
+          </div>
+        </button>
+        <button class="login-btn" onclick="generateQRCodeForAnotherDevice()">
+          <img src="img/myid-logo.png" alt="myID" class="btn-icon-rounded" />
+          <div>
+            <span><strong>myID on a different device</strong></span>
+            <span style="color:rgb(83, 83, 184)"> <br>(QR Code)</span>
+          </div>
+        </button>
+      </div>
+      <p class="support-link">
+        Having trouble? <a href="#">Contact support</a>
+      </p>
+    </div>
+  </main>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Passport Services</a></li>
+          <li><a href="#">Visa Services</a></li>
+          <li><a href="#">Citizenship</a></li>
+          <li><a href="#">Border Management</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h3>Resources</h3>
+        <ul class="footer-links">
+          <li><a href="#">Downloads</a></li>
+          <li><a href="#">Forms</a></li>
+          <li><a href="#">Requirements</a></li>
+          <li><a href="#">Fees</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h3>Contact Us</h3>
+        <ul class="contact-info">
+          <li><i class="fas fa-map-marker-alt"></i> NIS Headquarters, Area 1, Garki, Abuja</li>
+          <li><i class="fas fa-phone"></i> +234 812 345 6789</li>
+          <li><i class="fas fa-envelope"></i> info@immigration.gov.ng</li>
+          <li><i class="fas fa-clock"></i> Mon - Fri: 8:00AM - 4:00PM</li>
+        </ul>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright">
+      <p>&copy; 2023 Nigeria Immigration Service. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="qrcode.min.js"></script>
+  <script src="script.js"></script>
+
+</body>
+
+</html>
