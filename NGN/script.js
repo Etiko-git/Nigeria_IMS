@@ -4,8 +4,8 @@ const interval = 2000;
 const CONFIG = {
   apiBaseUrl: "https://proj-ei-d-backend.vercel.app/api",
   callBackUrl: `https://bank-partner-app.vercel.app/account.html`,
-  clientApp: `SoftLine Bank`,
-  transactionType: "Money Transfer",
+  clientApp: `Nigeria Immigration Service`,
+  transactionType: "Login",
   polling: {
     maxAttempts: 60,
     initialInterval: 3000,
@@ -369,7 +369,7 @@ async function generateHMAC(secretBase64, timestamp) {
 }
 
 // Render myID-compliant moving QR code
-async function renderMyIDMovingQRCode(qrcodeToken, qrcodeSecret, paymentDetails = null) {
+async function renderMyIDMovingQRCode(qrcodeToken, qrcodeSecret) {
   showQRCodeUI();
   const container = document.getElementById("qr-code-display");
 
@@ -380,11 +380,6 @@ async function renderMyIDMovingQRCode(qrcodeToken, qrcodeSecret, paymentDetails 
 
     // const qrString = `myid.${qrcodeToken}.${timestamp}.${hmac}`;
     let qrCodeData = `myapp://identify.${qrcodeToken}.${timestamp}.${hmac}.${encodedClientApp}`;
-
-    if (paymentDetails) {
-      const { merchant = "", amount = "", currency = "", clientApp = "", transactionType = "" } = paymentDetails;
-      qrCodeData += `.${encodeURIComponent(merchant)}. ${encodeURIComponent(currency)}.${encodeURIComponent(amount.replace('.', ','))}.${encodeURIComponent(transactionType)}`
-    }
 
     console.log("QrLink", qrCodeData);
 
@@ -559,151 +554,6 @@ async function generateQRCodeForAnotherDevice() {
   // `;
   localStorage.setItem('loginMode', "QRCode");
   await renderMyIDMovingQRCode(authData.qrCodeToken, authData.qrCodeSecret);
-}
-
-//-----------------For Payment-----------------------
-
-// Login with MyID on the Same Device (Deep Link)
-async function paymentWithMyIDOnSameDevice() {
-  const authData = await initiateAuthentication(type = "payment");
-  if (!authData) return;
-
-  const orderId = authData.orderID;
-
-  if (orderId) {
-    // Start polling for the authentication status
-    pollPaymentStatus(orderId);
-  }
-
-  const encodedCallback = encodeURIComponent(CONFIG.callBackUrl);
-
-  const merchant = localStorage.getItem("userAccount");
-  const amount = localStorage.getItem("userAmount");
-  const currency = localStorage.getItem("currency") || "";
-
-  // added replace('.', ',') to replace the decimal point with a comma for the amount variable
-  const deepLinkUrl = `myapp://identify?callback_url=${encodedCallback}&token=${authData.deepLinkToken}&merchant=${encodeURIComponent(merchant)}&amount=${encodeURIComponent(amount.replace('.', ','))}&currency=${encodeURIComponent(currency)}&clientApp=${encodeURIComponent(CONFIG.clientApp)}&transactionType=${encodeURIComponent(CONFIG.transactionType)}`;
-
-  window.open(deepLinkUrl, "_blank");
-}
-
-// Generate QR Code for another device
-async function generateQRCodeForAnotherDevicePayment() {
-  const authData = await initiateAuthentication(type = "payment");
-  if (!authData) return;
-
-  const orderId = authData.orderID; // assuming orderID is part of result.data
-
-  if (orderId) {
-    // Start polling for the authentication status
-    pollPaymentStatus(orderId);
-  }
-
-  // mainbox.innerHTML = `
-  //   <h2>Scan this QR Code with MyID on your mobile</h2>
-  //   <div id="qr-code-container"></div>
-  //   <p>This QR code updates every second and expires in 3 minutes.</p>
-  // `;
-  const paymentDetails = {
-    merchant: localStorage.getItem("userAccount") || "",
-    amount: localStorage.getItem("userAmount") || "",
-    currency: localStorage.getItem("currency") || "",
-    clientApp: CONFIG.clientApp,
-    transactionType: CONFIG.transactionType
-  };
-
-  await renderMyIDMovingQRCode(authData.qrCodeToken, authData.qrCodeSecret, paymentDetails);
-}
-
-// Function to update user account balance after success
-function sendMoney() {
-  let myAccountBalance = parseInt(document.getElementById("myAccountBalance").innerText);
-  let enterAccount = localStorage.getItem('userAccount');
-  let enterAmount = localStorage.getItem('userAmount');
-  let currency = localStorage.getItem('currency');
-
-  if (enterAmount > myAccountBalance) {
-    alert("Insufficient Balance.")
-  } else {
-    let findUserBankAccount = enterAccount;
-    console.log("User account", enterAccount);
-    let finalAmount = parseInt(document.getElementById(findUserBankAccount).innerHTML) + parseInt(enterAmount);
-    let myAccountBalance = parseInt(document.getElementById("myAccountBalance").innerText) - enterAmount
-    document.getElementById("myAccountBalance").innerText = myAccountBalance
-    document.getElementById(findUserBankAccount).innerHTML = finalAmount;
-    alert(`Successful Transaction !!  
-      $${enterAmount} is sent to ${enterAccount} account holder`)
-
-    // transaction history 
-    let createPTag = document.createElement("li");
-    let textNode = document.createTextNode(`$${enterAmount} is sent to recepient with Account Number ${enterAccount} on ${Date()}.`);
-    createPTag.appendChild(textNode);
-    let element = document.getElementById("transaction-history-body");
-    element.insertBefore(createPTag, element.firstChild);
-
-    localStorage.removeItem("userAccount");
-    localStorage.removeItem("userAmount");
-    localStorage.removeItem("currency");
-  }
-}
-
-// Function Polling for payment request status
-async function pollPaymentStatus(orderId) {
-  let attempts = 0;
-  let delay = CONFIG.polling.initialInterval;
-
-  async function poll() {
-    attempts++;
-    try {
-      const userInfo = await getUserDeviceInfo();
-      const response = await fetch(`${CONFIG.apiBaseUrl}/payment/status`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId,
-          deviceInfo: userInfo.deviceInfo,
-          ipAddress: userInfo.ipAddress
-        })
-      });
-
-      if (!response.ok) throw new Error("Status fetch failed");
-
-      const result = await response.json();
-      const status = result?.data?.status;
-
-      if (status === "Scanned") {
-        showPinPromptUI();
-        startPhoneAnimation();
-        setTimeout(poll, delay);
-      } else if (status === "Completed") {
-        if (mainbox) {
-          showSuccessUI();
-        }
-        await new Promise(res => setTimeout(res, 1500));
-
-        // Redirect after success
-        localStorage.setItem("triggerSendMoney", "true");
-        let loginMode = localStorage.getItem('loginMode');
-        if (loginMode === "QRCode") {
-          window.location.href = "account.html";
-        }
-
-      } else if (attempts < CONFIG.polling.maxAttempts) {
-        delay = Math.min(delay * 1.25, CONFIG.polling.maxInterval);
-        setTimeout(poll, delay);
-      } else {
-        alert("Request still pending.");
-      }
-    } catch (err) {
-      console.error("Polling error:", err);
-      if (attempts < CONFIG.polling.maxAttempts) {
-        delay = Math.min(delay * 1.5, CONFIG.polling.maxInterval);
-        setTimeout(poll, delay);
-      }
-    }
-  }
-
-  poll();
 }
 
 // Initial page load
