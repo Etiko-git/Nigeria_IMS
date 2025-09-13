@@ -1,0 +1,107 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    /* Light background */
+    color: #333;
+    /* Dark text color */
+    margin: 0;
+    padding: 0;
+}
+
+/* Auth Container */
+.auth-container {
+    max-width: 35vw;
+    width: 60vw;
+    background-color: #ffffff;
+    /* White background for forms */
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+}
+
+/* Reg log body */
+.reg-log-body {
+    height: 100vh;
+    display: flex;
+    /* Use flexbox */
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+}
+
+/* Form Header */
+.form-header {
+    background-color: #4CAF50;
+    /* Green background */
+    color: white;
+    /* White text */
+    padding: 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    text-align: center;
+}
+
+/* Form Styles */
+.auth-form {
+    padding: 20px;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    /* Full width */
+    padding: 10px;
+    /* Padding */
+    border: 1px solid #ccc;
+    /* Light border */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+
+
+/* Footer and Links */
+.form-footer {
+    text-align: center;
+    /* Centered text */
+}
+
+a {
+    color: #4CAF50;
+    /* Green links */
+    text-decoration: none;
+    /* No underline */
+}
+
+a:hover {
+    text-decoration: underline;
+    /* Underline on hover */
+}
+
+/* Checkbox Container */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    /* Center checkbox vertically */
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+    /* Space between checkbox and label */
+}
+
+/* Hidden Class for toggling forms */
+.hidden {
+    display: none;
+    /* Hide elements */
+}
