@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
 $user = "root";   
-$pass = "Folashade2004.";  
+$pass = "";  
 $dbname = "ims_db";
 
 // Create connection
