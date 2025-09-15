@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssss", $full_name, $username, $email, $password_hash);
 
     if ($stmt->execute()) {
-        echo "✅ Registration successful! <a href='login.php'>Login here</a>";
+        echo "✅ Registration successful! <a href='login.html'>Login here</a>";
     } else {
         echo "❌ Error: " . $stmt->error;
     }
